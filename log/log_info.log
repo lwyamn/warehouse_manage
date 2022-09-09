@@ -1,0 +1,14 @@
+2022-08-15 14:15:39.207 [main] INFO  c.c.w.WarehouseManageApplicationTests - Starting WarehouseManageApplicationTests using Java 1.8.0_322 on PluMoon with PID 16136 (started by 95309 in D:\javacode\warehouse_manage)
+2022-08-15 14:15:39.209 [main] INFO  c.c.w.WarehouseManageApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2022-08-15 14:15:41.609 [main] INFO  s.d.s.w.PropertySourcedRequestMappingHandlerMapping - Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+2022-08-15 14:15:42.264 [main] INFO  s.d.s.web.plugins.DocumentationPluginsBootstrapper - Context refreshed
+2022-08-15 14:15:42.284 [main] INFO  s.d.s.web.plugins.DocumentationPluginsBootstrapper - Found 2 custom documentation plugin(s)
+2022-08-15 14:15:42.313 [main] INFO  s.d.spring.web.scanners.ApiListingReferenceScanner - Scanning for api listing references
+2022-08-15 14:15:42.454 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: getFinalNumberUsingPOST_1
+2022-08-15 14:15:42.459 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: addHeaderUsingPOST_1
+2022-08-15 14:15:42.461 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: addTbodyAndSunUsingPOST_1
+2022-08-15 14:15:42.463 [main] INFO  s.d.s.w.r.operation.CachingOperationNameGenerator - Generating unique operation named: endAddUsingGET_1
+2022-08-15 14:15:42.492 [main] INFO  s.d.spring.web.scanners.ApiListingReferenceScanner - Scanning for api listing references
+2022-08-15 14:15:42.525 [main] INFO  c.c.w.WarehouseManageApplicationTests - Started WarehouseManageApplicationTests in 3.696 seconds (JVM running for 4.506)
+2022-08-15 15:53:38.493 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2022-08-15 15:53:38.507 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

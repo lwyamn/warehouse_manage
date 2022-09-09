@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.sippingRegisterHeaderMapper">
+
+    <resultMap id="sippingRegisterHeaderMap" type="sippingRegisterHeader">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="registerID" column="djdh"/>
+        <result property="orderID" column="ddh"/>
+        <result property="deliveryDate" column="jhrq"/>
+        <result property="customerName" column="khmc"/>
+        <result property="consignAddress" column="tydz"/>
+        <result property="transport" column="wlfs"/>
+        <result property="contact" column="lxr"/>
+        <result property="contactWay" column="lxfs"/>
+    </resultMap>
+
+    <resultMap id="sippingRegisterMap" type="java.util.Map">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="registerID" column="djdh"/>
+        <result property="orderID" column="ddh"/>
+        <result property="deliveryDate" column="jhrq"/>
+        <result property="customerName" column="khmc"/>
+        <result property="consignAddress" column="tydz"/>
+        <result property="transport" column="wlfs"/>
+        <result property="contact" column="lxr"/>
+        <result property="contactWay" column="lxfs"/>
+        <result property="productID" column="cpbh"/>
+        <result property="productName" column="cpmc"/>
+        <result property="productType" column="cpxl"/>
+        <result property="labelContent" column="bqnr"/>
+        <result property="gl" column="gg"/>
+        <result property="registerNumber" column="djsl"/>
+        <result property="shippedNumber" column="yfhsl"/>
+    </resultMap>
+
+    <select id="getSippingRegisterHeader" resultMap="sippingRegisterHeaderMap">
+        select djlsh, ddh, jhrq, khmc, tydz, wlfs, lxr, lxfs  from fhdjdh
+        where djdh = #{registerID}
+    </select>
+
+    <select id="querySippingRegisterPaging" parameterType="java.util.Map" resultMap="sippingRegisterMap">
+        select fhdjdh.djlsh, cpbh, cpmc, cpxl, bqnr, gg, djsl, yfhsl, djdh, ddh, jhrq, khmc, tydz, wlfs, lxr, lxfs
+        from fhdjdh left join fhdjdb
+        on fhdjdb.djlsh = fhdjdh.djlsh
+        order by djlsh asc
+        limit #{currIndex},#{pageSize};
+    </select>
+
+    <delete id="deleteSippingRegisterHeader" parameterType="java.lang.Integer">
+        delete
+        from fhdjdh
+        where djlsh=#{purchaseID};
+    </delete>
+
+
+
+</mapper>

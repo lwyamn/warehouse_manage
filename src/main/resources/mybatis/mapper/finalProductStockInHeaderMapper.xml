@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.finalProductStockInHeaderMapper">
+
+    <resultMap id="finalProductStockInHeaderMap" type="finalProductStockInHeader">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="stockInID" column="rkdh"/>
+        <result property="lot" column="scpch"/>
+        <result property="stockInPerson" column="rkr"/>
+        <result property="stockInDate" column="rkrq"/>
+    </resultMap>
+
+    <update id="updateStockInHeader" parameterType="finalProductStockInHeader">
+        update cpprkdh
+        <set>
+            <if test="stockInID!=null">
+                rkdh = #{stockInID},
+            </if>
+            <if test="lot!=null">
+                scpch = #{lot},
+            </if>
+            <if test="stockInPerson!=null">
+                rkr = #{stockInPerson},
+            </if>
+            <if test="stockInDate!=null">
+                rkrq = #{stockInDate}
+            </if>
+        </set>
+        where djlsh = #{purchaseID};
+    </update>
+
+    <resultMap id="finalProductStockInMap" type="java.util.Map">
+        <id property="purchaseID" column="djlsh"/>
+        <result property="stockInID" column="rkdh"/>
+        <result property="lot" column="scpch"/>
+        <result property="stockInPerson" column="rkr"/>
+        <result property="stockInDate" column="rkrq"/>
+        <result property="documentsTbodyID" column="djbth"/>
+        <result property="locationBarcode" column="qwtm"/>
+        <result property="stockInNumber" column="rksl"/>
+        <result property="lot" column="scpch"/>
+        <result property="productID" column="cpbh"/>
+        <result property="productName" column="cpmc"/>
+        <result property="productType" column="cpxl"/>
+        <result property="productGrade" column="cpdj"/>
+        <result property="gl" column="gg"/>
+    </resultMap>
+
+    <insert id="addProductToHeader" parameterType="java.util.Map">
+        insert into cpprkdh(djlsh, rkdh, scpch, rkr, rkrq)
+        select #{purchaseID},+CONCAT('CR-',year(CURDATE()),'-',month(CURDATE()),'-',(right(max(rkdh),4)+1)),#{lot},#{stockInPerson},curdate()
+        from cpprkdh
+    </insert>
+
+    <select id="getMaxPurchaseID" resultType="java.lang.Integer">
+        select max(djlsh)+1 from cpprkdh
+    </select>
+
+    <select id="queryStockInPaging" resultMap="finalProductStockInMap" parameterType="java.util.Map" >
+        select cpprkdh.djlsh ,
+               cpprkdb.djbth ,
+               rkdh,
+               cpprkdh.scpch,
+               rkr,
+               rkrq,
+               cpbh,
+               cpmc,
+               rkdh,
+               cpdj,
+               gg,
+               qwtm,
+               rksl
+        from cpprkdb,
+             cpprkdh,
+             cpprkds
+        where cpprkds.djlsh = cpprkdh.djlsh
+          and cpprkdh.djlsh = cpprkdb.djlsh
+          and cpprkdb.djbth = cpprkds.djbth
+        order by djlsh asc,djbth asc
+        limit #{currIndex},#{pageSize};
+    </select>
+
+    <delete id="deleteStockInHeader" parameterType="java.lang.Integer">
+        delete
+        from cpprkdh
+        where djlsh=#{purchaseID};
+    </delete>
+
+    <select id="queryDocumentsTbody" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(1) from cpprkds where djlsh = #{purchaseID}
+    </select>
+
+    <insert id="addProductToHeaderJOG" parameterType="finalProductStockInHeader">
+        insert into cpprkdh (djlsh, rkdh, scpch, rkr, rkrq)
+        select max(djlsh)+1,#{stockInID},#{lot},#{stockInPerson},#{stockInDate}
+        from cpprkdh
+    </insert>
+
+</mapper>

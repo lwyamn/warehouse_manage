@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.finalProductStockInSunMapper">
+
+    <resultMap id="finalProductStockInSunMapperMap" type="finalProductStockInSun">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="documentsTbodyID" column="djbth"/>
+        <result property="locationBarcode" column="qwtm"/>
+        <result property="stockInNumber" column="rksl"/>
+    </resultMap>
+
+    <update id="updateStockInSun" parameterType="finalProductStockInSun">
+        update cpprkds
+        <set>
+            <if test="locationBarcode!=null">
+                qwtm = #{locationBarcode},
+            </if>
+            <if test="stockInNumber!=null">
+                rksl = #{stockInNumber}
+            </if>
+        </set>
+        where djlsh = #{purchaseID} and djbth = #{documentsTbodyID};
+    </update>
+
+    <insert id="addProductToSun" parameterType="java.util.Map">
+        insert into cpprkds(djlsh, djbth, qwtm, rksl)
+        select #{purchaseID},ifnull((max(djbth)+1),1),'YW001',#{stockInNumber}
+        from cpprkds
+        where djlsh=#{purchaseID}
+    </insert>
+
+    <delete id="deleteStockInSun" parameterType="java.util.Map">
+        delete
+        from cpprkds
+        where djlsh = #{purchaseID} and djbth=#{documentsTbodyID};
+    </delete>
+
+    <insert id="addProductToSunJOG" parameterType="finalProductStockInSun">
+        insert into cpprkds (djlsh, djbth, qwtm, rksl)
+        select max(djlsh)+1,max(djbth)+1,#{locationBarcode},#{stockInNumber}
+        from cpprkds
+    </insert>
+
+
+</mapper>

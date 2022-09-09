@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.sippingRegisterTbodyMapper">
+
+    <resultMap id="sippingRegisterTbodyMap" type="sippingRegisterTbody">
+        <result property="productID" column="cpbh"/>
+        <result property="productName" column="cpmc"/>
+        <result property="productType" column="cpxl"/>
+        <result property="labelContent" column="bqnr"/>
+        <result property="gl" column="gg"/>
+        <result property="registerNumber" column="djsl"/>
+        <result property="shippedNumber" column="yfhsl"/>
+    </resultMap>
+
+    <select id="getSippingRegisterTbody" resultMap="sippingRegisterTbodyMap">
+        select cpbh, cpmc, cpxl, bqnr, gg, djsl, yfhsl
+        from fhdjdb
+        where djlsh = #{purchaseID}
+        and djsl-ifnull(yfhsl,0) >0
+    </select>
+
+    <update id="updateSippingRegisterTbodySN" parameterType="java.util.Map">
+        update fhdjdb
+        set yfhsl=yfhsl+#{sippingNumber}
+        where djlsh=#{purchaseID} and cpbh=#{productID}
+    </update>
+
+    <delete id="deleteSippingRegisterTbody" parameterType="java.lang.Integer">
+        delete
+        from fhdjdb
+        where djlsh=#{purchaseID};
+    </delete>
+
+</mapper>

@@ -1,0 +1,60 @@
+spring:
+  redis:
+    host: 121.36.104.226
+    port: 6379
+    password: lzj439949
+    database: 0
+    timeout: 1000
+    lettuce:
+      pool:
+        max-active: 20
+        max-idle: 5
+        max-wait: -1
+        min-idle: 0
+  main:
+    lazy-initialization: false
+  datasource:
+    username: root
+    password: cjlu14725800
+    url: jdbc:mysql://121.36.104.226:3306/cjlu?useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 10
+      min-idle: 1
+      max-active: 50
+      max-wait: 60000
+      time-between-eviction-runs-millis: 300000
+      validation-query: select 1 from dual
+      test-on-borrow: true
+      test-on-return: true
+      pool-prepared-statements: false
+      max-open-prepared-statements: 50
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 1000
+        wall:
+          enabled: true
+          log-violation: true
+          throw-exception: false
+          config:
+            delete-where-none-check: true
+      web-stat-filter:
+        exclusions: /druid/*,*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico
+        url-pattern: /*
+      stat-view-servlet:
+        enabled: true
+        login-username: cjlu
+        login-password: cjlu14725800
+        allow:
+mybatis:
+  type-aliases-package: com.cjlu.pojo
+  mapper-locations: classpath:mybatis/mapper/*.xml
+logging:
+  level:
+    root: info
+  config: classpath:logback-spring.xml
+
+

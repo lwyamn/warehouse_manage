@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.salesSippingHeaderMapper">
+
+    <resultMap id="salesSippingHeaderMap" type="salesSippingHeader">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="sippingID" column="fhdh"/>
+        <result property="sippingDate" column="fhrq"/>
+        <result property="registerID" column="djdh"/>
+        <result property="sippingAddress" column="fhd"/>
+        <result property="customName" column="khmc"/>
+        <result property="contact" column="lxr"/>
+        <result property="phone" column="dh"/>
+        <result property="consignAddress" column="tydz"/>
+        <result property="single" column="zdr"/>
+        <result property="singleTime" column="zdsj"/>
+        <result property="operateOrigin" column="czly"/>
+        <result property="transport" column="wlfs"/>
+        <result property="Logistics" column="wlfy"/>
+        <result property="orderType" column="ddlx"/>
+    </resultMap>
+
+    <update id="updateSalesSippingHeader" parameterType="salesSippingHeader">
+        update xsfhdh
+        <set>
+            <if test="sippingID!=null">
+                fhdh = #{sippingID},
+            </if>
+            <if test="sippingDate!=null">
+                fhrq = #{sippingDate},
+            </if>
+            <if test="registerID!=null">
+                djdh = #{registerID},
+            </if>
+            <if test="sippingAddress!=null">
+                fhd = #{sippingAddress},
+            </if>
+            <if test="customName!=null">
+                khmc = #{customName},
+            </if>
+            <if test="contact!=null">
+                lxr = #{contact},
+            </if>
+            <if test="phone!=null">
+                dh = #{phone},
+            </if>
+            <if test="consignAddress!=null">
+                tydz = #{consignAddress},
+            </if>
+            <if test="single!=null">
+                zdr = #{single},
+            </if>
+            <if test="singleTime!=null">
+                zdsj = #{singleTime},
+            </if>
+            <if test="operateOrigin!=null">
+                czly = #{operateOrigin},
+            </if>
+            <if test="transport!=null">
+                wlfs = #{transport},
+            </if>
+            <if test="Logistics!=null">
+                wlfy = #{Logistics},
+            </if>
+            <if test="orderType!=null">
+                ddlx = #{orderType},
+            </if>
+        </set>
+        where djlsh=#{purchaseID}
+    </update>
+
+    <resultMap id="salesSippingMap" type="java.util.Map">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="sippingID" column="fhdh"/>
+        <result property="sippingDate" column="fhrq"/>
+        <result property="registerID" column="djdh"/>
+        <result property="sippingAddress" column="fhd"/>
+        <result property="customName" column="khmc"/>
+        <result property="contact" column="lxr"/>
+        <result property="phone" column="dh"/>
+        <result property="consignAddress" column="tydz"/>
+        <result property="single" column="zdr"/>
+        <result property="singleTime" column="zdsj"/>
+        <result property="operateOrigin" column="czly"/>
+        <result property="transport" column="wlfs"/>
+        <result property="Logistics" column="wlfy"/>
+        <result property="orderType" column="ddlx"/>
+        <result property="documentsTbodyID" column="djbth"/>
+        <result property="locationBarcode" column="qwtm"/>
+        <result property="sippingNumber" column="fhsl"/>
+        <result property="locationStock" column="qwkc"/>
+        <result property="autoID" column="Autoid"/>
+        <result property="productType" column="cpxl"/>
+        <result property="productID" column="cpbh"/>
+        <result property="productName" column="cpmc"/>
+        <result property="gl" column="gg"/>
+        <result property="volume" column="rl"/>
+        <result property="productGrade" column="cpdj"/>
+        <result property="batchNumber" column="pch"/>
+        <result property="registerNumber" column="djsl"/>
+        <result property="noShippedNumber" column="wfhsl"/>
+        <result property="batchStock" column="pckc"/>
+        <result property="nowStock" column="dqkc"/>
+    </resultMap>
+
+    <insert id="addSalesSippingHeader" parameterType="salesSippingHeader">
+        insert into xsfhdh(djlsh, fhdh, fhrq, djdh, fhd, khmc, lxr, dh, tydz, zdr, zdsj, czly, wlfs, wlfy, ddlx)
+        value (#{purchaseID},concat('FHD-',year(curdate()),'-',month(curdate()),'-',#{purchaseID}),curdate(),#{registerID},'义乌',#{customName},#{contact},#{phone},#{consignAddress},#{single},CURDATE(),'移动端',#{transport},#{Logistics},'成品')
+    </insert>
+
+    <select id="getMaxPurchaseID" resultType="java.lang.Integer">
+        select max(djlsh)+1 from xsfhdh
+    </select>
+
+    <select id="querySalesSippingPaging" resultMap="salesSippingMap" parameterType="java.util.Map">
+        select xsfhdh.djlsh, fhdh, fhrq, djdh, fhd, khmc, lxr, dh, tydz, zdr, zdsj, czly, wlfs, wlfy, ddlx, xsfhdb.djbth, Autoid, cpxl, cpbh, cpmc, gg, rl, cpdj, pch, djsl, wfhsl, pckc, dqkc,  qwtm, fhsl, qwkc
+        from xsfhdh,xsfhdb,xsfhds
+        where xsfhdb.djlsh = xsfhdh.djlsh
+        and xsfhdh.djlsh = xsfhds.djlsh
+        and xsfhdb.djbth = xsfhds.djbth
+        order by djlsh asc ,djbth asc
+        limit #{currIndex},#{pageSize};
+    </select>
+
+    <delete id="deleteSalesSippingHeader" parameterType="java.lang.Integer">
+        delete
+        from xsfhdh
+        where djlsh=#{purchaseID};
+    </delete>
+
+    <select id="queryDocumentsTbody" resultType="java.lang.Integer">
+        select count(1)
+        from xsfhdb
+        where xsfhdb.djlsh=#{purchaseID};
+    </select>
+
+
+
+
+</mapper>

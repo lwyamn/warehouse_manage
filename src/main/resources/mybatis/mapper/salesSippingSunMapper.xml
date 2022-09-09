@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.salesSippingSunMapper">
+
+    <resultMap id="salesSippingSunMap" type="salesSippingSun">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="documentsTbodyID" column="djbth"/>
+        <result property="locationBarcode" column="qwtm"/>
+        <result property="sippingNumber" column="fhsl"/>
+        <result property="locationStock" column="qwkc"/>
+    </resultMap>
+
+    <update id="updateSalesSippingSun" parameterType="salesSippingSun">
+        update xsfhds
+        <set>
+            <if test="locationBarcode!=null">
+                qwtm = #{locationBarcode},
+            </if>
+            <if test="sippingNumber!=null">
+                fhsl = #{sippingNumber},
+            </if>
+            <if test="locationStock!=null">
+                qwkc = #{locationStock},
+            </if>
+        </set>
+        where djlsh=#{purchaseID} and djbth = #{documentsTbodyID}
+    </update>
+
+    <insert id="addSalesSippingSun" parameterType="salesSippingSun">
+        insert into xsfhds (djlsh, djbth, qwtm, fhsl, qwkc)
+        select #{purchaseID},(max(djbth)+1),'YW001',#{sippingNumber},#{locationStock}
+        from xsfhds
+        where djlsh=#{purchaseID}
+    </insert>
+
+    <delete id="deleteSalesSippingSun" parameterType="java.util.Map">
+        delete
+        from xsfhds
+        where djlsh=#{purchaseID} and djbth = #{documentsTbodyID};
+    </delete>
+
+
+</mapper>

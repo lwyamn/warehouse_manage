@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.finalProductStockInTbodyMapper">
+
+    <resultMap id="finalProductStockInTbodyMap" type="finalProductStockInTbody">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="documentsTbodyID" column="djbth"/>
+        <result property="lot" column="scpch"/>
+        <result property="productID" column="cpbh"/>
+        <result property="productName" column="cpmc"/>
+        <result property="productType" column="cpxl"/>
+        <result property="productGrade" column="cpdj"/>
+        <result property="gl" column="gg"/>
+    </resultMap>
+
+    <update id="updateStockInTbody" parameterType="finalProductStockInTbody">
+        update cpprkds
+        <set>
+            <if test="lot!=null">
+                scpch = #{lot},
+            </if>
+            <if test="productID!=null">
+                cpbh = #{productID},
+            </if>
+            <if test="productName!=null">
+                cpmc = #{productName},
+            </if>
+            <if test="productType!=null">
+                cpxl = #{productType},
+            </if>
+            <if test="productGrade!=null">
+                cpdj = #{productGrade},
+            </if>
+            <if test="gl!=null">
+                gg = #{gl}
+            </if>
+        </set>
+        where djlsh = #{purchaseID} and djbth=#{documentsTbodyID};
+    </update>
+
+    <insert id="addProductToTbody" parameterType="java.util.Map">
+        insert into cpprkdb(djlsh, djbth, scpch, cpbh, cpmc, cpxl, cpdj, gg)
+        select #{purchaseID},ifnull((max(djbth)+1),1),#{lot},#{productID},#{productName},#{productType},'A级',#{gl}
+        from cpprkdb
+        where djlsh=#{purchaseID}
+    </insert>
+
+    <delete id="deleteStockInTbody" parameterType="java.util.Map">
+        delete
+        from cpprkdb
+        where djlsh = #{purchaseID} and djbth=#{documentsTbodyID};
+    </delete>
+
+    <insert id="addProductToTbodyJOG" parameterType="finalProductStockInTbody">
+        insert into cpprkdb (djlsh, djbth, scpch, cpbh, cpmc, cpxl, cpdj, gg)
+        select max(djlsh)+1,max(djbth)+1,#{lot},#{productID},#{productName},#{productType},#{productGrade},#{gl}
+        from cpprkdb
+    </insert>
+    
+
+</mapper>

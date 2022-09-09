@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.productSpecGLMapper">
+
+    <resultMap id="productSpecGLMap" type="productSpecGL">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="productID" column="cpbh"/>
+        <result property="productGrade" column="cpdj"/>
+        <result property="locationBarcode" column="qwtm"/>
+        <result property="gl" column="gg"/>
+        <result property="batchNumber" column="pch"/>
+        <result property="finalNumber" column="qmsl"/>
+    </resultMap>
+
+    <insert id="addProductSpec" parameterType="productSpecGL">
+        insert into cpggzzh(djlsh, cpbh, cpdj, qwtm, gg, pch, qmsl)
+        select (max(djlsh)+1),#{productID},'A级','YW001',#{gl},#{batchNumber},#{finalNumber}
+        from cpggzzh
+    </insert>
+
+    <insert id="addProductSpecJOG" parameterType="productSpecGL">
+        insert into cpggzzh (djlsh, cpbh, cpdj, qwtm, gg, pch, qmsl)
+        select (max(djlsh)+1),#{productID},#{productGrade},#{locationBarcode},#{gl},#{batchNumber},#{finalNumber}
+        from cpggzzh
+    </insert>
+
+    <select id="getFinalNumber" resultType="java.util.Map">
+        select qmsl from cpggzzh
+        where cpbh = #{productID} and pch=#{batchNumber} and gg=#{gl}
+    </select>
+
+    <select id="querySpecPaging" resultMap="productSpecGLMap" parameterType="java.util.Map">
+        select *
+        from cpggzzh
+        order by djlsh asc
+        limit #{currIndex},#{pageSize};
+    </select>
+
+    <update id="updateProductSpecFN" parameterType="java.util.Map">
+        update cpggzzh
+        set qmsl=qmsl-#{sippingNumber}
+        where cpbh=#{productID} and pch=#{batchNumber}
+    </update>
+
+    <update id="updateProductSpec" parameterType="productSpecGL">
+        update cpggzzh
+        <set>
+            <if test="productID!=null">
+                cpbh = #{productID},
+            </if>
+            <if test="productGrade!=null">
+                cpdj = #{productGrade},
+            </if>
+            <if test="locationBarcode!=null">
+                qwtm=#{locationBarcode},
+            </if>
+            <if test="gl!=null">
+                gg = #{gl},
+            </if>
+            <if test="batchNumber!=null">
+                pch = #{batchNumber},
+            </if>
+            <if test="finalNumber!=null">
+                qmsl = #{finalNumber},
+            </if>
+        </set>
+        where djlsh = #{purchaseID};
+    </update>
+
+    <delete id="deleteProductSpec" parameterType="java.lang.Integer">
+        delete
+        from cpggzzh
+        where djlsh=#{purchaseID};
+    </delete>
+
+</mapper>

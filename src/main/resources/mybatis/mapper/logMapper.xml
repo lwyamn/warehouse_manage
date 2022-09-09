@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.logMapper">
+
+    <insert id="addLog" parameterType="com.cjlu.pojo.log">
+        insert into log(operationUser, requestPath, executionTime, parameter, action, methodDesc, systemType, actionType, ip, operationTime)
+        VALUES (#{operationUser},#{requestPath},#{executionTime},#{parameter},#{action},#{methodDesc},#{systemType},#{actionType},#{ip},now())
+    </insert>
+    
+    <select id="queryLogPaging" parameterType="java.util.Map" resultType="com.cjlu.pojo.log">
+        select *
+        from log
+        order by id asc
+        limit #{currIndex},#{pageSize};
+    </select>
+
+
+
+</mapper>

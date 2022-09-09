@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.packBarcodeMsgMapper">
+
+    <resultMap id="packBarcodeMsgMap" type="packBarcodeMsg">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="serialID" column="lsh"/>
+        <result property="lot" column="scpch"/>
+        <result property="packGL" column="bzgg"/>
+        <result property="productID" column="cpbh"/>
+        <result property="productName" column="cpmc"/>
+        <result property="stockInNumber" column="rksl"/>
+    </resultMap>
+
+    <select id="getTaskList" resultMap="packBarcodeMsgMap">
+        select scpch,bzgg,cpbh,cpmc from txmdyh where lsh = #{serialID}
+    </select>
+    <update id="updatePackBarcodeMsg" parameterType="packBarcodeMsg">
+        update txmdyh
+        <set>
+            <if test="lot!=null">
+                scpch=#{lot},
+            </if>
+            <if test="packGL!=null">
+                bzgg=#{packGL},
+            </if>
+            <if test="productID!=null">
+                cpbh=#{productID},
+            </if>
+            <if test="productName!=null">
+                cpmc=#{productName},
+            </if>
+            <if test="stockInNumber!=null">
+                rksl=#{stockInNumber}
+            </if>
+        </set>
+        where lsh = #{serialID};
+    </update>
+
+    <select id="queryMsgPaging" resultMap="packBarcodeMsgMap" parameterType="java.util.Map">
+        select *
+        from txmdyh
+        order by lsh asc
+        limit #{currIndex},#{pageSize};
+    </select>
+    
+    <insert id="addPackBarcodeMsg" parameterType="packBarcodeMsg">
+        insert into txmdyh (djlsh, lsh, scpch, bzgg, cpbh, cpmc, rksl)
+        select (max(djlsh)+1),(max(lsh)+1),#{lot},#{packGL},#{productID},#{productName},#{stockInNumber}
+        from txmdyh
+    </insert>
+
+    <delete id="deletePackBarcodeMsg" parameterType="java.lang.Integer">
+        delete
+        from txmdyh
+        where lsh=#{serialID};
+    </delete>
+
+    
+</mapper>

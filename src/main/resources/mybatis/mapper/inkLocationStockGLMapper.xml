@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.inkLocationStockGLMapper">
+
+    <resultMap id="inkLocationStockGLMap" type="inkLocationStockGL">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="year" column="yy"/>
+        <result property="month" column="mm"/>
+        <result property="productID" column="cpbh"/>
+        <result property="productName" column="cpmc"/>
+        <result property="productGrade" column="cpdj"/>
+        <result property="locationBarcode" column="qwtm"/>
+        <result property="batchNumber" column="pch"/>
+        <result property="startNumber" column="qcsl"/>
+        <result property="stockInNumber" column="rksl"/>
+        <result property="stockOutNumber" column="cksl"/>
+        <result property="finalNumber" column="qmsl"/>
+    </resultMap>
+
+    <select id="judgeInkLocationStock" resultMap="inkLocationStockGLMap">
+        select *
+        from msqwkczzh
+        where pch = #{batchNumber}
+    </select>
+
+    <select id="getFinalNumber" resultType="java.util.Map">
+        select qmsl as finalnumber
+        from msqwkczzh
+        where cpbh = #{productID}
+          and pch = #{batchNumber}
+          and yy = year(curdate())
+          and mm = month(curdate())
+    </select>
+
+    <select id="queryGLPaging" resultMap="inkLocationStockGLMap" parameterType="java.util.Map">
+        select *
+        from msqwkczzh
+        order by djlsh asc
+        limit #{currIndex},#{pageSize};
+    </select>
+
+    <insert id="addInkLocationStock" parameterType="inkLocationStockGL">
+        insert into msqwkczzh(djlsh, yy, mm, cpbh, cpmc, cpdj, qwtm, pch, qcsl, rksl, cksl, qmsl)
+        select (max(djlsh) + 1),
+               year(curdate()),
+               month(curdate()),
+               #{productID},
+               #{productName},
+               'A级',
+               'YW001',
+               #{batchNumber},
+               0,
+               #{stockInNumber},
+               0,
+               #{stockInNumber}
+        from msqwkczzh
+    </insert>
+
+    <update id="updateInkLocationStockS" parameterType="java.util.Map">
+        update msqwkczzh
+        set cksl=ifnull(cksl,0) + #{sippingNumber},
+            qmsl=qmsl - #{sippingNumber}
+        where pch = #{batchNumber}
+          and yy = year(curdate())
+          and mm = month(curdate())
+          and cpbh = #{productID}
+    </update>
+
+    <update id="updateInkLocationStock" parameterType="inkLocationStockGL">
+        update msqwkczzh
+        set yy   = year(curdate()),
+            mm   = month(curdate()),
+            rksl = ifnull(rksl, 0) + #{stockInNumber},
+            qmsl=ifnull(qmsl, 0) + #{stockInNumber}
+        where pch = #{batchNumber}
+    </update>
+
+    <update id="updateGL" parameterType="inkLocationStockGL">
+        update msqwkczzh
+        <set>
+            <if test="productID!=null">
+                cpbh = #{productID},
+            </if>
+            <if test="productName!=null">
+                cpmc = #{productName},
+            </if>
+            <if test="productGrade!=null">
+                cpdj = #{productGrade},
+            </if>
+            <if test="locationBarcode!=null">
+                qwtm = #{locationBarcode},
+            </if>
+            <if test="batchNumber!=null">
+                pch = #{batchNumber},
+            </if>
+            <if test="startNumber!=null">
+                qcsl = #{startNumber},
+            </if>
+            <if test="stockInNumber!=null">
+                rksl = #{stockInNumber},
+            </if>
+            <if test="stockOutNumber!=null">
+                cksl = #{stockOutNumber},
+            </if>
+            <if test="finalNumber!=null">
+                qmsl = #{finalNumber}
+            </if>
+        </set>
+        where djlsh = #{purchaseID}
+    </update>
+
+    <delete id="deleteGL" parameterType="java.lang.Integer">
+        delete
+        from msqwkczzh
+        where djlsh=#{purchaseID};
+    </delete>
+
+</mapper>

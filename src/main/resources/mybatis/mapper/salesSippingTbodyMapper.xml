@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cjlu.mapper.salesSippingTbodyMapper">
+
+    <resultMap id="salesSippingTbodyMap" type="salesSippingTbody">
+        <result property="purchaseID" column="djlsh"/>
+        <result property="documentsTbodyID" column="djbth"/>
+        <result property="autoID" column="Autoid"/>
+        <result property="productType" column="cpxl"/>
+        <result property="productID" column="cpbh"/>
+        <result property="productName" column="cpmc"/>
+        <result property="gl" column="gg"/>
+        <result property="volume" column="rl"/>
+        <result property="productGrade" column="cpdj"/>
+        <result property="batchNumber" column="pch"/>
+        <result property="registerNumber" column="djsl"/>
+        <result property="noShippedNumber" column="wfhsl"/>
+        <result property="batchStock" column="pckc"/>
+        <result property="nowStock" column="dqkc"/>
+    </resultMap>
+
+    <update id="updateSalesSippingTbody" parameterType="salesSippingTbody">
+        update xsfhdh
+        <set>
+            <if test="autoID!=null">
+                Autoid = #{autoID},
+            </if>
+            <if test="productType!=null">
+                cpxl = #{productType},
+            </if>
+            <if test="productID!=null">
+                cpbh = #{productID},
+            </if>
+            <if test="productName!=null">
+                cpmc = #{productName},
+            </if>
+            <if test="gl!=null">
+                gg = #{gl},
+            </if>
+            <if test="volume!=null">
+                rl = #{volume},
+            </if>
+            <if test="productGrade!=null">
+                cpdj = #{productGrade},
+            </if>
+            <if test="batchNumber!=null">
+                pch = #{batchNumber},
+            </if>
+            <if test="registerNumber!=null">
+                djsl = #{registerNumber},
+            </if>
+            <if test="noShippedNumber!=null">
+                wfhsl = #{noShippedNumber},
+            </if>
+            <if test="batchStock!=null">
+                pckc = #{batchStock},
+            </if>
+            <if test="nowStock!=null">
+                dqkc = #{nowStock},
+            </if>
+        </set>
+        where djlsh=#{purchaseID} and djbth = #{documentsTbodyID}
+    </update>
+
+    <insert id="addSalesSippingTbody" parameterType="java.util.Map">
+        insert into xsfhdb(djlsh, djbth, Autoid, cpxl, cpbh, cpmc, gg, rl, cpdj, pch, djsl, wfhsl, pckc, dqkc)
+        SELECT #{purchaseID},(max(djbth)+1),(max(djbth)+1),#{productType},#{productID},#{productName},#{gl},left(#{gl},instr(#{gl},'/')-1)+0,'A级',#{batchNumber},#{registerNumber},#{registerNumber}-#{sippingNumber},#{batchStock},#{nowStock}
+        from xsfhdb
+        where djlsh=#{purchaseID}
+    </insert>
+
+    <delete id="deleteSalesSippingTbody" parameterType="java.util.Map">
+        delete
+        from xsfhdb
+        where djlsh=#{purchaseID} and djbth = #{documentsTbodyID};
+    </delete>
+
+
+</mapper>
